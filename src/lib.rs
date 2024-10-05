@@ -214,6 +214,7 @@ pub mod flat;
 /// | HDR      | Yes                                       | Yes                                     |
 /// | ICO      | Yes                                       | Yes                                     |
 /// | JPEG     | Yes                                       | Yes                                     |
+/// | JPEG XL  | Yes                                       | ---                                     |
 /// | EXR      | Yes                                       | Yes                                     |
 /// | PNG      | Yes                                       | Yes                                     |
 /// | PNM      | Yes                                       | Yes                                     |
@@ -262,6 +263,8 @@ pub mod codecs {
     pub mod ico;
     #[cfg(feature = "jpeg")]
     pub mod jpeg;
+    #[cfg(feature = "jxl")]
+    pub mod jxl;
     #[cfg(feature = "exr")]
     pub mod openexr;
     #[cfg(feature = "png")]

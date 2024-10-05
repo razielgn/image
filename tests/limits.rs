@@ -144,6 +144,24 @@ fn jpeg() {
 }
 
 #[test]
+#[cfg(feature = "jxl")]
+fn jxl() {
+    use image::codecs::jxl::JxlDecoder;
+
+    let image = include_bytes!("images/jxl/lossy/rgb.jxl");
+    // sanity check that our image loads successfully without limits
+    assert!(load_from_memory_with_format(image, ImageFormat::Jxl).is_ok());
+
+    // image::ImageReader
+    assert!(load_through_reader(image, ImageFormat::Jxl, width_height_limits()).is_err());
+
+    // JxlDecoder
+    let mut decoder = JxlDecoder::new(Cursor::new(image)).unwrap();
+    assert!(decoder.set_limits(width_height_limits()).is_err());
+    // No tests for allocation limits because the caller is responsible for allocating the buffer in this case.
+}
+
+#[test]
 #[cfg(feature = "webp")]
 fn webp() {
     use image::codecs::webp::WebPDecoder;

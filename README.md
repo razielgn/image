@@ -46,12 +46,13 @@ image format encoders and decoders.
 | -------- | ----------------------------------------- | --------------------------------------- |
 | AVIF     | Yes (8-bit only) \*                       | Yes (lossy only)                        |
 | BMP      | Yes                                       | Yes                                     |
-| DDS      | Yes                                       | ---                                      |
+| DDS      | Yes                                       | ---                                     |
 | Farbfeld | Yes                                       | Yes                                     |
 | GIF      | Yes                                       | Yes                                     |
 | HDR      | Yes                                       | Yes                                     |
 | ICO      | Yes                                       | Yes                                     |
 | JPEG     | Yes                                       | Yes                                     |
+| JPEG XL  | Yes                                       | ---                                     |
 | EXR      | Yes                                       | Yes                                     |
 | PNG      | Yes                                       | Yes                                     |
 | PNM      | Yes                                       | Yes                                     |

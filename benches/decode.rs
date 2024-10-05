@@ -75,6 +75,11 @@ fn load_all(c: &mut Criterion) {
             files: &["simple-gray.webp", "simple-rgb.webp"],
             format: ImageFormat::WebP,
         },
+        BenchDef {
+            dir: &["jxl", "lossy"],
+            files: &["rgba_2.jxl", "rgb.jxl", "grayscale.jxl"],
+            format: ImageFormat::Jxl,
+        },
     ];
 
     for bench in BENCH_DEFS {

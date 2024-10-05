@@ -27,6 +27,9 @@ pub enum ImageFormat {
     /// An Image in JPEG Format
     Jpeg,
 
+    /// An Image in JPEG XL Format
+    Jxl,
+
     /// An Image in GIF Format
     Gif,
 
@@ -90,6 +93,7 @@ impl ImageFormat {
             Some(match ext.as_str() {
                 "avif" => ImageFormat::Avif,
                 "jpg" | "jpeg" => ImageFormat::Jpeg,
+                "jxl" => ImageFormat::Jxl,
                 "png" | "apng" => ImageFormat::Png,
                 "gif" => ImageFormat::Gif,
                 "webp" => ImageFormat::WebP,
@@ -161,6 +165,7 @@ impl ImageFormat {
         match mime_type.as_ref() {
             "image/avif" => Some(ImageFormat::Avif),
             "image/jpeg" => Some(ImageFormat::Jpeg),
+            "image/jxl" => Some(ImageFormat::Jxl),
             "image/png" => Some(ImageFormat::Png),
             "image/gif" => Some(ImageFormat::Gif),
             "image/webp" => Some(ImageFormat::WebP),
@@ -207,6 +212,7 @@ impl ImageFormat {
         match self {
             ImageFormat::Avif => "image/avif",
             ImageFormat::Jpeg => "image/jpeg",
+            ImageFormat::Jxl => "image/jxl",
             ImageFormat::Png => "image/png",
             ImageFormat::Gif => "image/gif",
             ImageFormat::WebP => "image/webp",
@@ -237,6 +243,7 @@ impl ImageFormat {
             ImageFormat::Png => true,
             ImageFormat::Gif => true,
             ImageFormat::Jpeg => true,
+            ImageFormat::Jxl => true,
             ImageFormat::WebP => true,
             ImageFormat::Tiff => true,
             ImageFormat::Tga => true,
@@ -261,6 +268,7 @@ impl ImageFormat {
             ImageFormat::Gif => true,
             ImageFormat::Ico => true,
             ImageFormat::Jpeg => true,
+            ImageFormat::Jxl => false,
             ImageFormat::Png => true,
             ImageFormat::Bmp => true,
             ImageFormat::Tiff => true,
@@ -290,6 +298,7 @@ impl ImageFormat {
         match self {
             ImageFormat::Png => &["png"],
             ImageFormat::Jpeg => &["jpg", "jpeg"],
+            ImageFormat::Jxl => &["jxl"],
             ImageFormat::Gif => &["gif"],
             ImageFormat::WebP => &["webp"],
             ImageFormat::Pnm => &["pbm", "pam", "ppm", "pgm"],
@@ -315,6 +324,7 @@ impl ImageFormat {
             ImageFormat::Png => cfg!(feature = "png"),
             ImageFormat::Gif => cfg!(feature = "gif"),
             ImageFormat::Jpeg => cfg!(feature = "jpeg"),
+            ImageFormat::Jxl => cfg!(feature = "jxl"),
             ImageFormat::WebP => cfg!(feature = "webp"),
             ImageFormat::Tiff => cfg!(feature = "tiff"),
             ImageFormat::Tga => cfg!(feature = "tga"),
@@ -338,6 +348,7 @@ impl ImageFormat {
             ImageFormat::Gif => cfg!(feature = "gif"),
             ImageFormat::Ico => cfg!(feature = "ico"),
             ImageFormat::Jpeg => cfg!(feature = "jpeg"),
+            ImageFormat::Jxl => false,
             ImageFormat::Png => cfg!(feature = "png"),
             ImageFormat::Bmp => cfg!(feature = "bmp"),
             ImageFormat::Tiff => cfg!(feature = "tiff"),
@@ -359,6 +370,7 @@ impl ImageFormat {
             ImageFormat::Gif,
             ImageFormat::Ico,
             ImageFormat::Jpeg,
+            ImageFormat::Jxl,
             ImageFormat::Png,
             ImageFormat::Bmp,
             ImageFormat::Tiff,
@@ -1600,6 +1612,8 @@ mod tests {
         assert_eq!(from_path("./a.jpg").unwrap(), ImageFormat::Jpeg);
         assert_eq!(from_path("./a.jpeg").unwrap(), ImageFormat::Jpeg);
         assert_eq!(from_path("./a.JPEG").unwrap(), ImageFormat::Jpeg);
+        assert_eq!(from_path("./a.jxl").unwrap(), ImageFormat::Jxl);
+        assert_eq!(from_path("./a.JXL").unwrap(), ImageFormat::Jxl);
         assert_eq!(from_path("./a.pNg").unwrap(), ImageFormat::Png);
         assert_eq!(from_path("./a.gif").unwrap(), ImageFormat::Gif);
         assert_eq!(from_path("./a.webp").unwrap(), ImageFormat::WebP);
@@ -1771,7 +1785,7 @@ mod tests {
     fn image_formats_are_recognized() {
         use ImageFormat::*;
         const ALL_FORMATS: &[ImageFormat] = &[
-            Avif, Png, Jpeg, Gif, WebP, Pnm, Tiff, Tga, Dds, Bmp, Ico, Hdr, Farbfeld, OpenExr,
+            Avif, Png, Jpeg, Jxl, Gif, WebP, Pnm, Tiff, Tga, Dds, Bmp, Ico, Hdr, Farbfeld, OpenExr,
         ];
         for &format in ALL_FORMATS {
             let mut file = Path::new("file.nothing").to_owned();
@@ -1816,11 +1830,13 @@ mod tests {
         assert!(all_formats.contains(&ImageFormat::Bmp));
         assert!(all_formats.contains(&ImageFormat::Farbfeld));
         assert!(all_formats.contains(&ImageFormat::Jpeg));
+        assert!(all_formats.contains(&ImageFormat::Jxl));
     }
 
     #[test]
     fn reading_enabled() {
         assert_eq!(cfg!(feature = "jpeg"), ImageFormat::Jpeg.reading_enabled());
+        assert_eq!(cfg!(feature = "jxl"), ImageFormat::Jxl.reading_enabled());
         assert_eq!(
             cfg!(feature = "ff"),
             ImageFormat::Farbfeld.reading_enabled()
@@ -1836,5 +1852,6 @@ mod tests {
             ImageFormat::Farbfeld.writing_enabled()
         );
         assert!(!ImageFormat::Dds.writing_enabled());
+        assert!(!ImageFormat::Jxl.writing_enabled());
     }
 }

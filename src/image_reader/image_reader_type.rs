@@ -155,6 +155,8 @@ impl<'a, R: 'a + BufRead + Seek> ImageReader<R> {
             ImageFormat::Gif => Box::new(gif::GifDecoder::new(reader)?),
             #[cfg(feature = "jpeg")]
             ImageFormat::Jpeg => Box::new(jpeg::JpegDecoder::new(reader)?),
+            #[cfg(feature = "jxl")]
+            ImageFormat::Jxl => Box::new(jxl::JxlDecoder::new(reader)?),
             #[cfg(feature = "webp")]
             ImageFormat::WebP => Box::new(webp::WebPDecoder::new(reader)?),
             #[cfg(feature = "tiff")]
